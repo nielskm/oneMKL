@@ -36,6 +36,10 @@ foreach(blas_ct_source ${BLAS_CT_SOURCES})
     list(APPEND ONEMKL_LIBRARIES_${domain} onemkl_${domain}_mklcpu onemkl_${domain}_cublas)
   endif()
 
+  if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+    add_sycl_to_target(TARGET example_${domain}_${blas_ct_source} SOURCES ${blas_ct_source})
+  endif()
+
   target_link_libraries(example_${domain}_${blas_ct_source} PUBLIC
       ${ONEMKL_LIBRARIES_${domain}}
       ONEMKL::SYCL::SYCL

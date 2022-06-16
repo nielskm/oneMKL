@@ -37,6 +37,10 @@ target_compile_options(onemkl_lapack PRIVATE ${ONEMKL_BUILD_COPT})
 set_target_properties(onemkl_lapack PROPERTIES
   POSITION_INDEPENDENT_CODE ON
 )
-target_link_libraries(onemkl_lapack PUBLIC ONEMKL::SYCL::SYCL)
+if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+  add_sycl_to_target(TARGET onemkl_lapack SOURCES lapack_loader.cpp)
+else()
+  target_link_libraries(onemkl_lapack PUBLIC ONEMKL::SYCL::SYCL)
+endif()
 endif()
 

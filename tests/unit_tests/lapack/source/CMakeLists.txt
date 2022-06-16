@@ -93,3 +93,10 @@ target_include_directories(lapack_source_ct
     PUBLIC ${LAPACKE_INCLUDE}
 )
 target_link_libraries(lapack_source_ct PUBLIC ONEMKL::SYCL::SYCL)
+
+if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+  if (BUILD_SHARED_LIBS)
+    add_sycl_to_target(TARGET lapack_source_rt)
+  endif()
+  add_sycl_to_target(TARGET lapack_source_ct)
+endif()

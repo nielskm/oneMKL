@@ -61,7 +61,9 @@
 #else
 #include <CL/sycl.hpp>
 #endif
+#ifndef __HIPSYCL__
 #include <CL/sycl/backend/cuda.hpp>
+#endif
 #include <iostream>
 
 #include "oneapi/mkl/rng/detail/engine_impl.hpp"

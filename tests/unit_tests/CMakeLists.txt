@@ -68,7 +68,7 @@ foreach(domain ${TARGET_DOMAINS})
 
   add_executable(test_main_${domain}_ct main_test.cpp)
   target_include_directories(test_main_${domain}_ct PUBLIC ${GTEST_INCLUDE_DIR})
-  
+
   if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
     add_sycl_to_target(TARGET test_main_${domain}_ct SOURCES main_test.cpp)
   else()
@@ -88,9 +88,6 @@ foreach(domain ${TARGET_DOMAINS})
       onemkl
       ${${domain}_TEST_LIST_RT}
     )
-    if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
-      add_sycl_to_target(TARGET test_main_${domain}_rt SOURCES main_test.cpp)
-    endif()
   endif()
 
   if(ENABLE_MKLCPU_BACKEND)
@@ -165,9 +162,11 @@ foreach(domain ${TARGET_DOMAINS})
     DISCOVERY_TIMEOUT 30
   )
 
-  if(BUILD_SHARED_LIBS)
-    if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+  if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+    if (BUILD_SHARED_LIBS)
       add_sycl_to_target(TARGET test_main_${domain}_rt)
     endif()
+    add_sycl_to_target(TARGET test_main_${domain}_ct)
   endif()
+
 endforeach()

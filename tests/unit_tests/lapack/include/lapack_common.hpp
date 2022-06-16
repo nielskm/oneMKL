@@ -231,7 +231,11 @@ struct is_buf {
     static constexpr bool value{ false };
 };
 template <typename T, int dimensions, typename AllocatorT>
+#ifdef __HIPSYCL__
+struct is_buf<sycl::buffer<T, dimensions, AllocatorT>> {
+#else
 struct is_buf<sycl::buffer<T, dimensions, AllocatorT, void>> {
+#endif /* __HIPSYCL__ */
     static constexpr bool value{ true };
 };
 

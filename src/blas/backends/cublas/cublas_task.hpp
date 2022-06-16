@@ -15,7 +15,7 @@
 #else
 #include "cublas_scope_handle_hipsycl.hpp"
 namespace sycl {
-using interop_handler = sycl::interop_handle;
+using interop_handle = sycl::interop_handle;
 }
 #endif
 namespace oneapi {
@@ -34,7 +34,7 @@ static inline void host_task_internal(H &cgh, sycl::queue queue, F f) {
 #else
 template <typename H, typename F>
 static inline void host_task_internal(H &cgh, sycl::queue queue, F f) {
-    cgh.interop_task([f, queue](sycl::interop_handler ih) {
+    cgh.interop_task([f, queue](sycl::interop_handle ih) {
         auto sc = CublasScopedContextHandler(queue, ih);
         f(sc);
     });

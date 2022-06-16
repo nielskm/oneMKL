@@ -213,35 +213,43 @@ void print_example_banner() {
 int main(int argc, char** argv) {
     print_example_banner();
 
-    try {
-        sycl::device dev((sycl::default_selector()));
+    auto run = [](auto selector_) -> int
+    {
+        try {
+            sycl::device dev(std::move(selector_));
 
-        if (dev.is_gpu()) {
-            std::cout << "Running BLAS GEMM USM example on GPU device." << std::endl;
-            std::cout << "Device name is: " << dev.get_info<sycl::info::device::name>()
-                      << std::endl;
+            if (dev.is_gpu()) {
+                std::cout << "Running BLAS GEMM USM example on GPU device." << std::endl;
+                std::cout << "Device name is: " << dev.get_info<sycl::info::device::name>()
+                          << std::endl;
+            }
+            else {
+                std::cout << "Running BLAS GEMM USM example on CPU device." << std::endl;
+                std::cout << "Device name is: " << dev.get_info<sycl::info::device::name>()
+                          << std::endl;
+            }
+            std::cout << "Running with single precision real data type:" << std::endl;
+
+            run_gemm_example(dev);
+            std::cout << "BLAS GEMM USM example ran OK." << std::endl;
         }
-        else {
-            std::cout << "Running BLAS GEMM USM example on CPU device." << std::endl;
-            std::cout << "Device name is: " << dev.get_info<sycl::info::device::name>()
-                      << std::endl;
+        catch (sycl::exception const& e) {
+            std::cerr << "Caught synchronous SYCL exception during GEMM:" << std::endl;
+            std::cerr << "\t" << e.what() << std::endl;
+            std::cerr << "\tSYCL error code: " << e.code().value() << std::endl;
+            return 1;
         }
-        std::cout << "Running with single precision real data type:" << std::endl;
+        catch (std::exception const& e) {
+            std::cerr << "Caught std::exception during GEMM:" << std::endl;
+            std::cerr << "\t" << e.what() << std::endl;
+            return 1;
+        }
 
-        run_gemm_example(dev);
-        std::cout << "BLAS GEMM USM example ran OK." << std::endl;
-    }
-    catch (sycl::exception const& e) {
-        std::cerr << "Caught synchronous SYCL exception during GEMM:" << std::endl;
-        std::cerr << "\t" << e.what() << std::endl;
-        std::cerr << "\tSYCL error code: " << e.code().value() << std::endl;
-        return 1;
-    }
-    catch (std::exception const& e) {
-        std::cerr << "Caught std::exception during GEMM:" << std::endl;
-        std::cerr << "\t" << e.what() << std::endl;
-        return 1;
-    }
+        return 0;
+    };
 
-    return 0;
+    const int r0 = run(sycl::cpu_selector{});
+    const int r1 = run(sycl::gpu_selector{});
+
+    return r0 || r1;
 }
