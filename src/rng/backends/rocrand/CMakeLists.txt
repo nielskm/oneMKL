@@ -1,5 +1,5 @@
 #=================================================================================
-# Copyright (C) 2022 Heidelberg University, Engineering Mathematics and Computing Lab (EMCL) 
+# Copyright (C) 2022 Heidelberg University, Engineering Mathematics and Computing Lab (EMCL)
 # and Computing Centre (URZ)
 # cuRAND back-end Copyright (c) 2021, The Regents of the University of
 # California, through Lawrence Berkeley National Laboratory (subject to receipt
@@ -76,7 +76,11 @@ target_include_directories(${LIB_OBJ}
           ${MKL_INCLUDE}
 )
 
-target_link_libraries(${LIB_OBJ} PUBLIC ONEMKL::SYCL::SYCL roc::rocrand)
+if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+  target_link_libraries(${LIB_OBJ} PUBLIC roc::rocrand)
+else()
+  target_link_libraries(${LIB_OBJ} PUBLIC ONEMKL::SYCL::SYCL roc::rocrand)
+endif()
 target_compile_features(${LIB_OBJ} PUBLIC cxx_std_11)
 set_target_properties(${LIB_OBJ} PROPERTIES
   POSITION_INDEPENDENT_CODE ON

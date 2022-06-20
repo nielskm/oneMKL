@@ -199,7 +199,6 @@ else()
       message(STATUS "Looking for hipSYCL")
       find_package(hipSYCL CONFIG REQUIRED)
       set(USE_ADD_SYCL_TO_TARGET_INTEGRATION true)
-      add_library(ONEMKL::SYCL::SYCL INTERFACE IMPORTED)
     elseif(ONEMKL_SYCL_IMPLEMENTATION STREQUAL "dpc++")
       message(STATUS "Looking for dpc++")
       set(USE_ADD_SYCL_TO_TARGET_INTEGRATION false)
@@ -259,7 +258,7 @@ configure_file("${PROJECT_SOURCE_DIR}/cmake/oneMKLConfig.cmake"
 set(config_package_location "lib/cmake/${PROJECT_NAME}")
 install(EXPORT oneMKLTargets
   FILE oneMKLTargets.cmake
-  NAMESPACE MKL::
+  NAMESPACE ONEMKL::
   DESTINATION ${config_package_location}
 )
 install(

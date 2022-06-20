@@ -50,13 +50,17 @@ foreach(lapack_rt_source ${LAPACK_RT_SOURCES})
 
   if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
     add_sycl_to_target(TARGET example_${domain}_${lapack_rt_source} SOURCES ${LAPACK_RT_SOURCES})
+    target_link_libraries(example_${domain}_${lapack_rt_source} PUBLIC
+        onemkl
+        ${CMAKE_DL_LIBS}
+    )
+  else()
+    target_link_libraries(example_${domain}_${lapack_rt_source} PUBLIC
+        onemkl
+        ONEMKL::SYCL::SYCL
+        ${CMAKE_DL_LIBS}
+    )
   endif()
-
-  target_link_libraries(example_${domain}_${lapack_rt_source} PUBLIC
-      onemkl
-      ONEMKL::SYCL::SYCL
-      ${CMAKE_DL_LIBS}
-  )
 
   foreach(device_filter ${DEVICE_FILTERS})
     # Register example as ctest

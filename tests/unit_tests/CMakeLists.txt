@@ -79,15 +79,26 @@ foreach(domain ${TARGET_DOMAINS})
     add_executable(test_main_${domain}_rt main_test.cpp)
     target_include_directories(test_main_${domain}_rt PUBLIC ${GTEST_INCLUDE_DIR})
     target_compile_options(test_main_${domain}_rt PRIVATE -fsycl)
-    target_link_libraries(test_main_${domain}_rt PUBLIC
-      gtest
-      gtest_main
-      ${CMAKE_DL_LIBS}
-      ${${domain}_TEST_LINK}
-      ONEMKL::SYCL::SYCL
-      onemkl
-      ${${domain}_TEST_LIST_RT}
-    )
+    if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+      target_link_libraries(test_main_${domain}_rt PUBLIC
+        gtest
+        gtest_main
+        ${CMAKE_DL_LIBS}
+        ${${domain}_TEST_LINK}
+        onemkl
+        ${${domain}_TEST_LIST_RT}
+      )
+    else()
+      target_link_libraries(test_main_${domain}_rt PUBLIC
+        gtest
+        gtest_main
+        ${CMAKE_DL_LIBS}
+        ${${domain}_TEST_LINK}
+        ONEMKL::SYCL::SYCL
+        onemkl
+        ${${domain}_TEST_LIST_RT}
+      )
+    endif()
   endif()
 
   if(ENABLE_MKLCPU_BACKEND)
@@ -131,15 +142,26 @@ foreach(domain ${TARGET_DOMAINS})
     list(APPEND ONEMKL_LIBRARIES_${domain} onemkl_${domain}_rocrand)
   endif()
 
-  target_link_libraries(test_main_${domain}_ct PUBLIC
-      gtest
-      gtest_main
-      ${CMAKE_DL_LIBS}
-      ${${domain}_TEST_LINK}
-      ${ONEMKL_LIBRARIES_${domain}}
-      ONEMKL::SYCL::SYCL
-      ${${domain}_TEST_LIST_CT}
-  )
+  if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
+    target_link_libraries(test_main_${domain}_ct PUBLIC
+        gtest
+        gtest_main
+        ${CMAKE_DL_LIBS}
+        ${${domain}_TEST_LINK}
+        ${ONEMKL_LIBRARIES_${domain}}
+        ${${domain}_TEST_LIST_CT}
+    )
+  else()
+    target_link_libraries(test_main_${domain}_ct PUBLIC
+        gtest
+        gtest_main
+        ${CMAKE_DL_LIBS}
+        ${${domain}_TEST_LINK}
+        ${ONEMKL_LIBRARIES_${domain}}
+        ONEMKL::SYCL::SYCL
+        ${${domain}_TEST_LIST_CT}
+    )
+  endif())
 
   string(TOUPPER ${domain} DOMAIN_PREFIX)
 

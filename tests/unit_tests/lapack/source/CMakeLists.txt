@@ -79,7 +79,9 @@ if(BUILD_SHARED_LIBS)
       PUBLIC ${CMAKE_BINARY_DIR}/bin
       PUBLIC ${LAPACKE_INCLUDE}
   )
-  target_link_libraries(lapack_source_rt PUBLIC ONEMKL::SYCL::SYCL)
+  if ( NOT USE_ADD_SYCL_TO_TARGET_INTEGRATION )
+    target_link_libraries(lapack_source_rt PUBLIC ONEMKL::SYCL::SYCL)
+  endif()
 endif()
 
 add_library(lapack_source_ct OBJECT ${LAPACK_SOURCES})
@@ -92,7 +94,9 @@ target_include_directories(lapack_source_ct
     PUBLIC ${CMAKE_BINARY_DIR}/bin
     PUBLIC ${LAPACKE_INCLUDE}
 )
-target_link_libraries(lapack_source_ct PUBLIC ONEMKL::SYCL::SYCL)
+if ( NOT USE_ADD_SYCL_TO_TARGET_INTEGRATION )
+  target_link_libraries(lapack_source_ct PUBLIC ONEMKL::SYCL::SYCL)
+endif()
 
 if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
   if (BUILD_SHARED_LIBS)

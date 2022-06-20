@@ -53,7 +53,7 @@ set_target_properties(${LIB_OBJ} PROPERTIES
 target_link_libraries(${LIB_NAME} PUBLIC ${LIB_OBJ})
 
 #Set libraries as not transitive for dynamic
-if(BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS AND NOT USE_ADD_SYCL_TO_TARGET_INTEGRATION)
   set_target_properties(${LIB_NAME} PROPERTIES
     INTERFACE_LINK_LIBRARIES ONEMKL::SYCL::SYCL
   )

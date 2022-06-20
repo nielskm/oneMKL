@@ -20,9 +20,21 @@
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(CMakeFindDependencyMacro)
 
-#find_dependency(MKL REQUIRED)
+# If not hipSYCL, we need to find the SYCL implementation
 if ( NOT ${ONEMKL_SYCL_IMPLEMENTATION} STREQUAL "hipsycl" )
     find_dependency(SYCL REQUIRED)
 endif()
+
+# Define the ONEMKL::cuBLAS::cuBLAS, etc. targets.
+if ( ENABLE_CUBLAS_BACKEND )
+    find_dependency(cuBLAS REQUIRED)
+endif()
+if ( ENABLE_CURAND_BACKEND )
+    find_dependency(cuRAND REQUIRED)
+endif()
+if ( ENABLE_CUSOLVER_BACKEND )
+    find_dependency(cuSOLVER REQUIRED)
+endif()
+
 
 include("${CMAKE_CURRENT_LIST_DIR}/oneMKLTargets.cmake")

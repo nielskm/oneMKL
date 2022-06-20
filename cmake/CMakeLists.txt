@@ -19,5 +19,8 @@
 
 install(FILES FindMKL.cmake
               FindCompiler.cmake
+              FindcuBLAS.cmake
+              FindcuRAND.cmake
+              FindcuSOLVER.cmake
         DESTINATION "lib/cmake/${PROJECT_NAME}"
 )
