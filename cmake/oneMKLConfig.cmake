@@ -21,6 +21,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 include(CMakeFindDependencyMacro)
 
 #find_dependency(MKL REQUIRED)
-find_dependency(SYCL REQUIRED)
+if ( NOT ${ONEMKL_SYCL_IMPLEMENTATION} STREQUAL "hipsycl" )
+    find_dependency(SYCL REQUIRED)
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/oneMKLTargets.cmake")

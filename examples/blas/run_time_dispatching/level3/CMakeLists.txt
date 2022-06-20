@@ -51,30 +51,17 @@ foreach(blas_rt_source ${BLAS_RT_SOURCES})
       PUBLIC ${CMAKE_BINARY_DIR}/bin
   )
 
-  if(domain STREQUAL "blas" AND ENABLE_MKLCPU_BACKEND AND ENABLE_CUBLAS_BACKEND)
-    add_dependencies(example_${domain}_${blas_rt_source} onemkl_${domain}_mklcpu onemkl_${domain}_cublas)
-    list(APPEND ONEMKL_LIBRARIES_${domain} onemkl_${domain}_mklcpu onemkl_${domain}_cublas)
-  else()
-    add_dependencies(example_${domain}_${blas_rt_source} onemkl)
-  endif()
+  add_dependencies(example_${domain}_${blas_rt_source} onemkl)
 
   if (USE_ADD_SYCL_TO_TARGET_INTEGRATION)
-    add_sycl_to_target(TARGET example_${domain}_${blas_rt_source} SOURCES ${BLAS_RT_SOURCES})
+    add_sycl_to_target(TARGET example_${domain}_${blas_rt_source} SOURCES ${blas_rt_source})
   endif()
 
-  if(domain STREQUAL "blas" AND ENABLE_MKLCPU_BACKEND AND ENABLE_CUBLAS_BACKEND)
-    target_link_libraries(example_${domain}_${blas_rt_source} PUBLIC
-        ${ONEMKL_LIBRARIES}_${domain}
-        ONEMKL::SYCL::SYCL
-        ${CMAKE_DL_LIBS}
+  target_link_libraries(example_${domain}_${blas_rt_source} PUBLIC
+      onemkl
+      ONEMKL::SYCL::SYCL
+      ${CMAKE_DL_LIBS}
     )
-  else()
-    target_link_libraries(example_${domain}_${blas_rt_source} PUBLIC
-        onemkl
-        ONEMKL::SYCL::SYCL
-        ${CMAKE_DL_LIBS}
-    )
-  endif()
 
 
   # Register example as ctest
